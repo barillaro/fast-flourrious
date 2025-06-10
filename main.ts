@@ -3,10 +3,10 @@
  * Description: Core logic and custom extensions for micro:bit multiplayer interaction.
  * 
  * File: main.ts
- * Contains: Main logic. Initial template.
+ * Contains: Main logic. Task 1
  * 
  * Author: Sebastian Barillaro
- * Date: 2025-06-01
+ * Date: 2025-06-10
  * Platform: Microsoft MakeCode for micro:bit
  * 
  * Notes:
@@ -18,222 +18,280 @@
 
 
 // === Constants ===
-// TODO: Define constant values
-const defaultDefuseTime = 6  // seconds
-const radioGroup = 10
+const defaultDelyTime = 6  // seconds
+const defaultRadioGroup = 10
+const mGameOver = "gameOver"
 
 // === Flag Variables ===
-let bombActive = false // false = bomb not active ; true = bomb activated!
+let orderActive = false // false = order not active ; true = order activated!
 let gameOver = false // false = game is NOT over (playing) ; true = the game is over.
 
 // === Support Variables ===
-let defuseCode = ""
-let defuseTime = defaultDefuseTime;
+let delyDoor = ""
+let delyTime = defaultDelyTime;
 let myScore = 0
 
 // === Configuration variables ===
+// print radio Message
+let printMessage = false;
 // Set the number of players!
-let players = 4;
+let players = 20;
 // Set your ID (Must be unique in your group)
 let myID = randint(1, players); // Change the random value for something fix
 // Set the difficulty of the game: "easy", (more to come later)
 let difficulty = "easy";
-// Set the defuse code list
-let defuseCodeList = ["A"];
-// Optionally, you can extend the list of codes to include more codes
-// defuseCodeList = ["A", "B", "P0", "P1", "P2"]
+// Set the ringbell options list
+let ringbellPanel = ["A", "B", "0", "1", "2"]
 
-
-// === This executes at the beginning ===
+// =======================================
+// ========= Task 1:
+// =======================================
 // Configure the radio Group
 // TODO: radio.setGroup(use the radioGroup here)
 // start the game!
 // TODO: Call the startGame function
 
-
-// === Helper: Show current status (ID + Score) ===
-function showStatus() {
-    // Print the label "ID:" and the ID on the display
-    // TODO: show ID on the LED display
-
-    // Print the label "S:" and the score on the display
-    // TODO: show your score on the LED display
-
-}
-
-// This function configures the device to end the game
-function endGame() {
-    // Set the flag gameOver 
-    // TODO: set the flag variable gameOver = true
-    // Deactivate any bomb
-    // TODO: set the flag variable bombActive = false
-    //Stop the sound
-    music.stopAllSounds()
-    // Show the NO icon during 1 second (a visual reference)
-    basic.showIcon(IconNames.No)
-    basic.pause(1000)
-    // show the final score on screen
-    // TODO: call the showStatus function
-}
-
 // === Receive Radio Message ===
 // This function executes when the device receives a radio message.
-radio.onReceivedString(handleRadioMessage)
+radio.onReceivedString(radioMessageReceived)
 
 // === handler of the reception ===
-function handleRadioMessage(message: string) {
+function radioMessageReceived(message: string) {
+// =======================================
+// ========= Task: 2 (a)
+// =======================================
+// TODO: Set printMessage to false to stop showing the message on the LED display
+    // You have received a radio message. We will print it on the display
+    if (printMessage == true){
+        basic.showString(message);
+    }
+
     // If the game is over, we do nothing (return)
-    // TODO: if (check flag if game is over) 
-    {
-        return;
+    if (gameOver == true) {
+        // Show the NO icon during 1 second (a visual reference)
+        basic.showIcon(IconNames.Ghost)
+        basic.pause(1000)
+        return // This return instruction ends the function. 
+               // It continues where it was called from
     }
 
     // The game is not over. Let's see what we have received
-    if (message == "gameover") {
-        // The message received requires to end the game
-        // TODO: Call the endGame function
+// =======================================
+// ========= Task: 2 (b)
+// =======================================
+// TODO: check if the message received is equal to "gameover"
+   if (true) {
+        // The message received indicates to end the game
+        endGame()
         return;
     }
 
-    // Check if the message is of type bomb
-    if (isBombMessage(message) == true) {
-        // The message is of type bomb! Process the bomb message!
-        // TODO: Call the processBombMessage function!
+    // The header of the message indicates what type of message is
+    // Let's extract the header of the message
+    let header = message.substr(0, 5) // this line extract the first 5 letters
+// =======================================
+// ========= Task: 3
+// =======================================
+// TODO: Check if the header of the message is "order"
+    if (false) {
+        // The message is of type order! Process the order message!
+        announceOrder();
+        processOrderMessage(message)
     }
 }
 
-function processBombMessage(message: string) {
-    // The message received has four parts: bomb, Target ID, Defuse Code, and Defuse time.
+function processOrderMessage(message: string) {
+    // The message received has four parts: order, Courier ID, ring bell, and delivery time.
     // All the parts are together, separated by a :
+    // For example order:5:B:6
     // We need to split the parts by the separator
-    let parts = message.split(":")
+    let mParts = message.split(":")
     // We store the fields in variables starting with m (m for message)
-    let mTargetId = parseInt(parts[1])
-    let mCode = parts[2]
-    let mTime = parseInt(parts[3])
+    let mType = "";
+    let mCourierId = 0;
+    let mDelyDoor = "";
+    let mDelyTime = 0;
+// =======================================
+// ========= Task: 4
+// =======================================
+//TODO: take the message parts (0, 1, 2, and 3) 
+//      in separated variables (mType, mCourierId, mDelyDoor, mDelyTime)
+    mType = mParts[0];
 
-    // All players get a point for surviving this round
-    // TODO: Increment myScore by 1
-
-    // Short alert to all
-    // TODO: basic.showString( Show a visual notification "!" )
-
-    //Check if the bomb was sent to me :-O
-    if (mTargetId == myID) {
-        // Caramba!! I have the bomb!
-        // mark the flag bomb active!
-        // TODO: Mark bombActive = true
+    //Check if the order was sent to me :-O
+    if (mCourierId == myID) {
+        // Caramba!! The order is for me!!!
+        // mark the flag order active!
+        orderActive = true
         // save the message data:
-        defuseCode = mCode
-        defuseTime = mTime
+        delyDoor = mDelyDoor
+        delyTime = mDelyTime
 
-        // Show how to defuse the bomb on the LED display
-        basic.showString("CODE: " + defuseCode)
+        // Show the door to deliver the order on the LED display
+        basic.showString("Door:" + delyDoor)
 
-        // Start the countdown during "defuseTime" seconds
-        // TODO: call countdown() with defuseTime
+        // Start the countdown during "delyTime" seconds
+        countdown(delyTime)
 
-        // The countdown function ended. Check if you defused the bomb (or not) 
-        // TODO: Check if bombActive == true
-        {
-            // The bomb remains active. I am very sorry for you >:-D
-            explodeBomb() // booom!!!
+        // The countdown function ended.
+        // was the order delivered?  
+        // Check if you delivered the pizza (or not) 
+        if (orderActive == true){
+            // The order remains pending. I am very sorry for you >:-D
+            deliveryFail() // booom!!!
         }
-    } else {
-        // The bomb is not for me (fiuuuuu)
+    } else { // This ELSE comes from above if (mCourierId == myID) 
+        // The order is not for me (fiuuuuu)
         basic.pause(1000)
-        showStatus()
+        // Show I add a point
+        basic.showString("+1")
     }
 }
 
-
-
-// === Defuse Inputs ===
+// === Inputs handlers ===
 // This function executes when the button A is pressed
 input.onButtonPressed(Button.A, function () {
-    // Try to defuse using the code A
-    Defuse("A")
+    // deliver the order to door "A"
+    deliverTo("A"); // Use "A", not A
 })
 
-// TODO: add an input function to process the Button B
+// =======================================
+// ========= Task: 5
+// =======================================
+// TODO: add an input function to process the input Button B
+input.onButtonPressed(Button.B, function () {
+    // deliver the order to door "B".
+    // HINT: it is almost identical to the Button A input function
+})
 
 // TODO: add an input function to process the Pin 0
-// input.onPinPressed(TouchPin.P0, function () {
-//     Defuse("P0")
-// })
+input.onPinPressed(TouchPin.P0, function () {
+    // deliver the order to door "0"
+    deliverTo("0");
+})
 
 // TODO: add an input function to process the Pin 1
+input.onPinPressed(TouchPin.P1, function () {
+    // deliver the order to door "1"
+    // HINT: it is almost identical to the P0 input function
+})
 
 // TODO: add an input function to process the Pin 2
+input.onPinPressed(TouchPin.P2, function () {
+    // deliver the order to door "2"
+    // HINT: it is almost identical to the P0 input function
+})
 
-// === Helper: Handle Defuse Attempt ===
-function Defuse(codePressed: string) {
-    // TODO: Check if game is over. if (gameOver == true) 
+
+// === Helper: Handle Delivery Attempt ===
+function deliverTo(ringPressed: string) {
+    // Check if the game is over.
+    if (gameOver == true) 
     { // If the game is over, there is nothing to do
         return // end of function
     }
 
-    // The game is not over. Check if the bomb is active
-    // TODO: Check if game is over. if (bombActive == true) 
-    {   // The bomb is active! 
-        // Check if defused correctly
-        // TODO: Check if codePressed matches defuseCode. if (defuseCode == codePressed)
-        {// bomb defused correctly. Well done!
-            defuseSuccess()
-        }
-        // TODO: else 
-        {
-            // bomb is not defused. I am very sorry for you :-p
-            explodeBomb()
+    // NOTE: If you are reading this after the if gameOver validation, it means that
+    //       the game is not over. We keep delivering the order!
+    // The game is not over. Check if the order is active
+    if (orderActive == true) 
+    {   // The order is active! 
+        // Check if delivered correctly. Door must equal ringbell
+// =======================================
+// ========= Task: 6
+// =======================================
+// TODO: Check if you pressed the right ringbell
+    if (false){
+        // order delivered correctly. Well done!
+            deliveryOK()
+        } else {
+            // order is not delivered ok. I am very sorry for you :-p
+            deliveryFail()
         }
     }
 }
 
+// === Logo pressed: Create a pizza order ===
+input.onLogoEvent(TouchButtonEvent.Pressed, createOrder)
 
-// === Helper: Send Bomb ===
-function sendBomb() {
-    // We need to prepare the bomb message before sending it.
+function createOrder() {
+    // Not create order if there is another order active already
+    if (orderActive == true) return;
+    // Not create order if the game is over already
+    if (gameOver == true) return;
+    const now = control.millis()
+    if (now - lastSendTime > cooldownTimer * 1000) {
+        lastSendTime = now
+// =======================================
+// ========= Task: 7
+// =======================================
+// TODO: Create an order, prepare the order, and send the order.
+
+    } else {
+        basic.showIcon(IconNames.Chessboard)
+        basic.pause(200)
+    }
+}
+
+
+// === Helper: prepare Order ===
+function prepareOrder():string {
+// We need to prepare the order message before sending it.
     // The message is comprised of several parts separated by a :
     // Consider the following example
-    // - Type of message = bomb
-    // - TargetID = 12
-    // - defuse code = B
-    // - defuse time = 5 seconds
-    // Combining all the data, you can CODIFY a message as bomb:12:B:5
-    let message: string
+    // - Type of message = order
+    // - courierID = 12
+    // - door = B
+    // - DelyTime = 5 seconds
+    // Combining all the data,
+    // you can CODIFY a message as order:12:B:5
+    
+// Let's start by creating our variables. The m in the name says is for messaging
+    let mTypeMessage = "order"
+    let mCourierID;        // the courier destination
+    let mDoor;             // the door to deliver the order
+    let mDelyTime         // the time left to deliver the order
+    let mSeparator = ":"  // a separator, to not mix the data
+    let message: string   // The message with the full order
 
-    // Choose a target to send the bomb
-    let targetID
-    do { //TODO: Set the range of random target ID
-        targetID = randint(0, 0)
-    } while (targetID == myID); // This checks that we don't throw the bomb to ourselves
+// Choose a courier to send the order
+    do { // Choose a random courier ID
+        mCourierID = randint(1, players)
+    } while (mCourierID == myID); // This checks that you don't send the order to yourself
 
-    // Choose a random defuse code index
-    let defuseCodeIndex = randint(0, defuseCodeList.length - 1)
-    // TODO: Use the defuseCodeIndex to pick a defuse code (from the list of codes)
-    let defuseCode = defuseCodeList[0]
+// Choose a random door
+    // We choose a random option from all the ringbellPanel chances
+    let ringbellOption = randint(0, ringbellPanel.length - 1)
+    // we use the option to choose from the ringbell panel
+    mDoor = ringbellPanel[ringbellOption]
 
-    // Adjust defuse time for extreme difficulty
-    if (difficulty == "extreme") {
-        // defuseTime is one second less (minimum 1)
-        defuseTime = Math.max(1, defuseTime - 1)
-    } else {
-        defuseTime = defaultDefuseTime
-    }
+// Choose a delivery time
+    // Use the default delivery time
+    mDelyTime = defaultDelyTime
 
-    // Show the targetID on screen (and play some sound)   
-    basic.showString("To:" + targetID)
+// Show the targetID on screen (and play some sound)   
+    basic.showString("To:" + mCourierID)
     music.play(music.builtinPlayableSoundEffect(soundExpression.hello), music.PlaybackMode.InBackground)
 
-    // Assembly all the parts in a single message
+// Assembly all the parts in a single message
+// =======================================
+// ========= Task: 8
+// =======================================
     // TODO: concatenate the parts into a single message.
     //       Intercalate : in between as a separator
-    message = "bomb:" // concatenate + ":" + the ":" +  parts ;-)
+    message = "" // concatenate + ":" + the ":" +  parts ;-)
 
-    // send the message by radio!
-    // TODO: use the message to broadcast by radio
-    radio.sendString("your bomb here")
+// return the order
+    // The message order is ready! return the message
+    return message;
 }
 
-
+function sendOrder(message: string){
+    // send the message by radio!
+// =======================================
+// ========= Task: 9
+// =======================================
+    // TODO: use the message to broadcast by radio
+    radio.sendString("your order here")
+}
 
