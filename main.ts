@@ -79,8 +79,8 @@ function radioMessageReceived(message: string) {
 // =======================================
 // ========= Task: 2 (b)
 // =======================================
-// TODO: check if the message received is equal to "gameover"
-   if (true) {
+// TODO: check if the message received is equal to "gameOver"
+   if (message == "gameOver") {
         // The message received indicates to end the game
         endGame()
         return;
