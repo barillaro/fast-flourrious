@@ -1,5 +1,5 @@
 {
-    "name": "fast-flourrious",
+    "name": "fast-flourrious-Coaches",
     "description": "",
     "dependencies": {
         "core": "*",
@@ -8,8 +8,7 @@
     },
     "files": [
         "main.ts",
-        "README.md",
-        "backend.ts"
+        "README.md"
     ],
     "testFiles": [
         "test.ts"

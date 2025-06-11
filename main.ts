@@ -16,8 +16,7 @@
  * License: Reserved for Luxembourg Tech School ASBL
  ****************************************************************************************/
 
-
-basic.showString("MASTER")
+basic.showString("COACH")
 // === Constants ===
 const defaultDelyTime = 6  // seconds
 const defaultRadioGroup = 10
@@ -68,7 +67,7 @@ function createOrder() {
     // Not create order if the game is over already
     if (gameOver == true) return;
 
-    let message : string
+    let message: string
     message = prepareOrder()
     sendOrder(message)
 }
@@ -119,10 +118,10 @@ function prepareOrder(): string {
     // =======================================
     // TODO: concatenate the parts into a single message.
     //       Intercalate : in between as a separator
-    message = mTypeMessage + mSeparator 
-                + mCourierID + mSeparator 
-                + mDoor + mSeparator
-                + mDelyTime 
+    message = mTypeMessage + mSeparator
+        + mCourierID + mSeparator
+        + mDoor + mSeparator
+        + mDelyTime
 
     // return the order
     // The message order is ready! return the message
