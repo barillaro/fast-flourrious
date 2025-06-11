@@ -33,7 +33,7 @@ let myScore = 0
 
 // === Configuration variables ===
 // print radio Message
-let printMessage = false;
+let printMessage = true;
 // Set the number of players!
 let players = 20;
 // Set your ID (Must be unique in your group)
@@ -47,7 +47,7 @@ let ringbellPanel = ["A", "B", "0", "1", "2"]
 // ========= Task 1:
 // =======================================
 // Configure the radio Group
-// TODO: radio.setGroup(use the radioGroup here)
+// TODO: radio.setGroup(use the radio Group here)
 // start the game!
 // TODO: Call the startGame function
 
@@ -58,7 +58,7 @@ radio.onReceivedString(radioMessageReceived)
 // === handler of the reception ===
 function radioMessageReceived(message: string) {
 // =======================================
-// ========= Task: 2 (a)
+// ========= Task: 
 // =======================================
 // TODO: Set printMessage to false to stop showing the message on the LED display
     // You have received a radio message. We will print it on the display
@@ -77,7 +77,7 @@ function radioMessageReceived(message: string) {
 
     // The game is not over. Let's see what we have received
 // =======================================
-// ========= Task: 2 (b)
+// ========= Task: 2
 // =======================================
 // TODO: check if the message received is equal to "gameOver"
    if (true) {
@@ -117,6 +117,9 @@ function processOrderMessage(message: string) {
 //TODO: take the message parts (0, 1, 2, and 3) 
 //      in separated variables (mType, mCourierId, mDelyDoor, mDelyTime)
     mType = mParts[0];
+    mCourierId = parseInt(mParts[1])
+    mDelyDoor = mParts[2]
+    mDelyTime = parseInt(mParts[3])
 
     //Check if the order was sent to me :-O
     if (mCourierId == myID) {
