@@ -1,6 +1,19 @@
 /****************************************************************************************
- * Project: Micro:bit Multiplayer Game
- * Description: Core logic and custom extensions for micro:bit multiplayer interaction.
+ * Project: Micro:bit Multiplayer Game: Fast & Flourrious - Coach's version
+ * 
+ * Description: TODO
+ * 
+ * Instructions:
+ * - Press A button to broadcast "pizza" message. 
+ *      - It is used after task 1, to check that players can receive messages.
+ * 
+ * - Press A and B buttons (simultaneously) to broadcast a "gameOver" message.
+ *      - Use it after Task 2 to check the players can identify the message.
+ *      - Use after every round, to disable players to play further.
+ * 
+ * - Touch micro:bit logo to dispatch a delivery order.
+ *      - It generates an order to a randomly chosen CourierID and Apartment, and a fixed delivery Delivery time
+ *      - Use it to play
  * 
  * File: main.ts
  * Contains: Main logic. Initial template.
