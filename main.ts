@@ -58,10 +58,10 @@ let ringbellPanel = ["A", "B", "0", "1", "2"]
 radio.setGroup(defaultRadioGroup)
 
 input.onButtonPressed(Button.AB, function () {
-    basic.showIcon(IconNames.Ghost)
+    basic.showIcon(IconNames.Ghost,1000)
+    sendOrder(mGameOver)
     basic.showString(mGameOver)
     basic.showIcon(IconNames.Ghost)
-    sendOrder(mGameOver)
 })
 
 input.onButtonPressed(Button.A, function () {
