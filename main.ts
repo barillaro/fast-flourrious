@@ -47,7 +47,7 @@ let delyTime = defaultDelyTime;
 // print radio Message
 let printMessage = true;
 // Set the number of players!
-let players = 20;
+let players = 4;
 // Set your ID (Must be unique in your group)
 let myID = -1; // Change the random value for something fix
 // Set the difficulty of the game: "easy", (more to come later)
@@ -66,8 +66,8 @@ input.onButtonPressed(Button.AB, function () {
 
 input.onButtonPressed(Button.A, function () {
     let message = "pizza"
-    basic.showString(message)
     sendOrder(message)
+    basic.showString(message)
 })
 
 
