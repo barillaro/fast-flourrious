@@ -29,7 +29,7 @@
  * License: Reserved for Luxembourg Tech School ASBL
  ****************************************************************************************/
 
-basic.showString("COACH")
+basic.showString("COACH-5")
 // === Constants ===
 const defaultDelyTime = 6  // seconds
 const defaultRadioGroup = 10
@@ -107,9 +107,8 @@ function prepareOrder(): string {
     let message: string   // The message with the full order
 
     // Choose a courier to send the order
-    do { // Choose a random courier ID
-        mCourierID = randint(1, players)
-    } while (mCourierID == myID); // This checks that you don't send the order to yourself
+    // Choose a random courier ID
+    mCourierID = randint(1, players)
 
     // Choose a random door
     // We choose a random option from all the ringbellPanel chances
